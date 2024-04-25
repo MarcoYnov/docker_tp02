@@ -1,0 +1,39 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    container_name: docker_tp02_app
+    environment:
+      DATABASE_URL: mysql://root:${MYSQL_PASSWORD}@${MYSQL_HOST}:3306/${MYSQL_DB}
+    ports:
+      - 127.0.0.1:1337:${PORT}
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    hostname: mydocker
+    user: "${UID}:${UID}"
+    command: "bash -c \"npm run develop\""
+
+  
+  db:
+    image: mysql:8
+    container_name: docker_tp02_db
+    ports:
+      - 127.0.0.1:3306:3306
+    volumes:
+      - ./data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB}
+    restart: always
+  
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - ./cache:/data
+
