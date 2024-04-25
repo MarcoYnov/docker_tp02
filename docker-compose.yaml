@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: .docker/Dockerfile
+      target: development
     container_name: docker_tp02_app
     environment:
       DATABASE_URL: mysql://root:${MYSQL_PASSWORD}@${MYSQL_HOST}:3306/${MYSQL_DB}
@@ -13,7 +14,7 @@ services:
     depends_on:
       - db
     hostname: mydocker
-    user: "${UID}:${UID}"
+    user: "${UID}:${GID}"
     command: "bash -c \"npm run develop\""
 
   
